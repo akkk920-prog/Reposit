@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>OSINT INFO</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --card: #12151c;
+      --border: #1e2430;
+      --accent: #00f0ff;
+      --accent2: #00ff9d;
+      --text: #e8eef7;
+      --muted: #8b9bb4;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .hero {
+      position: relative;
+      height: 280px;
+      background: url('hero.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, var(--bg) 100%);
+    }
+
+    .hero-title {
+      position: relative;
+      z-index: 2;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: white;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+      margin-bottom: 20px;
+    }
+
+    .magnifier {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border: 3px solid var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 25px var(--accent), inset 0 0 15px rgba(0, 240, 255, 0.3);
+      animation: float 6s ease-in-out infinite;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .magnifier::after {
+      content: '';
+      position: absolute;
+      width: 28px;
+      height: 4px;
+      background: var(--accent);
+      bottom: -18px;
+      right: -12px;
+      transform: rotate(45deg);
+      border-radius: 2px;
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(20px, 40px) rotate(0deg); }
+      50% { transform: translate(180px, 90px) rotate(15deg); }
+    }
+
+    .container {
+      padding: 0 16px 40px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin: 28px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .search-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .search-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .search-card:active {
+      transform: scale(0.96);
+      border-color: var(--accent);
+    }
+
+    .search-card .icon {
+      font-size: 26px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .search-card .label {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .search-card .desc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .input-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .input-box.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    input, textarea {
+      width: 100%;
+      background: #0d1017;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.15);
+    }
+
+    .btn {
+      width: 100%;
+      background: linear-gradient(135deg, #00c4d4, #00e0a0);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+      opacity: 0.9;
+    }
+
+    .ai-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 8px;
+    }
+
+    .ai-messages {
+      height: 180px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+      padding-right: 6px;
+    }
+
+    .msg {
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .msg.bot {
+      color: var(--accent2);
+    }
+
+    .msg.user {
+      color: var(--text);
+      text-align: right;
+    }
+
+    .ai-input {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ai-input input {
+      margin-bottom: 0;
+      flex: 1;
+    }
+
+    .ai-input button {
+      width: 48px;
+      background: var(--accent);
+      border: none;
+      border-radius: 12px;
+      color: #000;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .results {
+      margin-top: 20px;
+      display: none;
+    }
+
+    .result-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .result-card .title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--accent);
+    }
+
+    .scan-line {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: scan 4s linear infinite;
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    @keyframes scan {
+      0% { top: 0; }
+      100% { top: 100%; }
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px 0 20px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="scan-line"></div>
+  <div class="magnifier" style="top: 60px; left: 30px;"></div>
+
+  <div class="hero">
+    <div class="hero-title">OSINT INFO</div>
+  </div>
+
+  <div class="container">
+
+    <div class="section-title">Тип поиска</div>
+    <div class="search-grid">
+      <div class="search-card" onclick="openSearch('fio')">
+        <span class="icon">👤</span>
+        <div class="label">ФИО</div>
+        <div class="desc">Имя + Фамилия</div>
+      </div>
+      <div class="search-card" onclick="openSearch('photo')">
+        <span class="icon">📸</span>
+        <div class="label">По фото</div>
+        <div class="desc">Геолокация</div>
+      </div>
+      <div class="search-card" onclick="openSearch('username')">
+        <span class="icon">🔗</span>
+        <div class="label">Username</div>
+        <div class="desc">Соцсети</div>
+      </div>
+      <div class="search-card" onclick="openSearch('city')">
+        <span class="icon">📍</span>
+        <div class="label">Город</div>
+        <div class="desc">Локация</div>
+      </div>
+    </div>
+
+    <div id="inputArea" class="input-box">
+      <div id="inputTitle" style="font-size:14px; margin-bottom:12px; color:var(--accent);"></div>
+      <input type="text" id="searchInput" placeholder="Введите данные..." />
+      <input type="file" id="photoInput" accept="image/*" style="display:none;" />
+      <button class="btn" onclick="runSearch()">Начать поиск</button>
+    </div>
+
+    <div class="section-title">AI OSINT Специалист</div>
+    <div class="ai-box">
+      <div class="ai-messages" id="aiMessages">
+        <div class="msg bot">Я — OSINT-специалист. Задай любой вопрос по открытым источникам: ФИО, фото, username, геолокация, связи.</div>
+      </div>
+      <div class="ai-input">
+        <input type="text" id="aiInput" placeholder="Спроси что-нибудь..." onkeydown="if(event.key==='Enter')sendAI()" />
+        <button onclick="sendAI()">➤</button>
+      </div>
+    </div>
+
+    <div class="results" id="results">
+      <div class="section-title">Результаты</div>
+      <div id="resultsList"></div>
+    </div>
+
+    <div class="footer">
+      OSINT INFO • Только открытые источники<br>
+      Россия • СНГ • США • Мир
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+    tg.setHeaderColor('#0a0c10');
+    tg.setBackgroundColor('#0a0c10');
+
+    let currentType = null;
+
+    function openSearch(type) {
+      currentType = type;
+      const area = document.getElementById('inputArea');
+      const title = document.getElementById('inputTitle');
+      const input = document.getElementById('searchInput');
+      const photo = document.getElementById('photoInput');
+
+      area.classList.add('active');
+      photo.style.display = 'none';
+      input.style.display = 'block';
+
+      if (type === 'fio') {
+        title.textContent = 'Поиск по ФИО';
+        input.placeholder = 'Иванов Иван Иванович';
+      } else if (type === 'photo') {
+        title.textContent = 'Определение локации по фото';
+        input.style.display = 'none';
+        photo.style.display = 'block';
+      } else if (type === 'username') {
+        title.textContent = 'Поиск по username';
+        input.placeholder = '@username или ник';
+      } else if (type === 'city') {
+        title.textContent = 'Поиск по городу / локации';
+        input.placeholder = 'Москва, Санкт-Петербург...';
+      }
+    }
+
+    function runSearch() {
+      const results = document.getElementById('results');
+      const list = document.getElementById('resultsList');
+      results.style.display = 'block';
+
+      list.innerHTML = `
+        <div class="result-card">
+          <div class="title">Открытые источники</div>
+          Найдено 7 упоминаний в публичных реестрах и соцсетях
+        </div>
+        <div class="result-card">
+          <div class="title">Социальные сети</div>
+          Возможные профили: VK, Telegram, Instagram (публичные)
+        </div>
+        <div class="result-card">
+          <div class="title">Статус</div>
+          Поиск выполнен только по открытым данным. Закрытые базы не используются.
+        </div>
+      `;
+
+      results.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function sendAI() {
+      const input = document.getElementById('aiInput');
+      const messages = document.getElementById('aiMessages');
+      const text = input.value.trim();
+      if (!text) return;
+
+      messages.innerHTML += `<div class="msg user">${text}</div>`;
+      input.value = '';
+
+      setTimeout(() => {
+        messages.innerHTML += `<div class="msg bot">Принял запрос. Для глубокого анализа по открытым источникам рекомендую уточнить: регион, примерный возраст, связанные username. Я могу помочь сформулировать правильные поисковые запросы.</div>`;
+        messages.scrollTop = messages.scrollHeight;
+      }, 600);
+
+      messages.scrollTop = messages.scrollHeight;
+    }
+  </script>
+</body>
+</html>
