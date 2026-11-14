@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CatUp</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Balance Bar (common) -->
+    <div class="top-bar" id="topBar">
+      <div class="balance-pill">
+        <span class="star">⭐</span>
+        <span id="balanceDisplay">0</span>
+        <button class="plus-btn" onclick="showScreen('topup')">+</button>
+      </div>
+      <div class="balance-pill x-pill">
+        <span>X</span>
+        <span id="xBalanceDisplay">0</span>
+        <button class="plus-btn" onclick="showScreen('topup')">+</button>
+      </div>
+    </div>
+
+    <!-- MAIN MENU / GAMES -->
+    <div class="screen active" id="screen-games">
+      <div class="menu-cards">
+        <div class="menu-card red" onclick="showScreen('cases')">
+          <div class="card-text">
+            <h2>Кейсы</h2>
+            <p>Открывайте кейсы и получайте призы</p>
+          </div>
+          <div class="card-icon case-icon">🧰</div>
+        </div>
+
+        <div class="menu-card orange" onclick="showScreen('upgrade')">
+          <div class="card-text">
+            <h2>Апгрейд</h2>
+            <p>Улучшите свои подарки или приумножьте звёзды</p>
+          </div>
+          <div class="card-icon">
+            <div class="mini-gauge">
+              <div class="gauge-fill"></div>
+              <span>77%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card cream" onclick="showScreen('crash')">
+          <div class="card-text">
+            <h2>Краш</h2>
+            <p>Успейте забрать выигрыш, пока ракета летит</p>
+          </div>
+          <div class="card-icon car-icon">🏎️</div>
+        </div>
+
+        <div class="menu-card green" onclick="showScreen('mines')">
+          <div class="card-text">
+            <h2>Мины</h2>
+            <p>Найдите выигрыш, не попав на мину</p>
+          </div>
+          <div class="card-icon">💣</div>
+        </div>
+
+        <div class="menu-card dark" onclick="showScreen('wheel')">
+          <div class="card-text">
+            <h2>Колесо Фортуны</h2>
+            <p>Проверь свою удачу в колесе Фортуны</p>
+          </div>
+          <div class="card-icon wheel-icon">🎡</div>
+        </div>
+
+        <div class="menu-card blue" onclick="showScreen('cat')">
+          <div class="card-text">
+            <h2>Кошка</h2>
+            <p>Пройди дорогу кошке и не попади под машину!</p>
+          </div>
+          <div class="card-icon cat-icon">🐱</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASES LIST -->
+    <div class="screen" id="screen-cases">
+      <div class="header">
+        <button class="back-btn" onclick="showScreen('games')">←</button>
+        <h1>Кейсы</h1>
+        <button class="settings-btn" onclick="toggleCaseSettings()">⚙️</button>
+      </div>
+      <div class="cases-grid" id="casesGrid">
+        <!-- filled by JS -->
+      </div>
+      <div class="demo-badge" id="demoBadge" style="display:none;">ДЕМО РЕЖИМ</div>
+    </div>
+
+    <!-- CASE OPEN -->
+    <div class="screen" id="screen-case-open">
+      <div class="header">
+        <button class="back-btn" onclick="showScreen('cases')">←</button>
+        <h1 id="caseOpenTitle">Кейс</h1>
+        <button class="settings-btn" onclick="toggleCaseSettings()">⚙️</button>
+      </div>
+      <div class="case-open-area">
+        <div class="live-bar">
+          <span class="live">LIVE</span>
+          <div class="live-items" id="liveItems"></div>
+        </div>
+        <div class="roulette-container">
+          <div class="roulette-window">
+            <div class="roulette-track" id="rouletteTrack"></div>
+          </div>
+          <div class="center-marker"></div>
+        </div>
+        <div class="case-actions">
+          <button class="btn secondary" onclick="showScreen('cases')">Настройки</button>
+          <button class="btn secondary" onclick="showPrizes()">Призы</button>
+        </div>
+        <button class="btn primary big" id="openCaseBtn" onclick="openCase()">Крутить за ⭐ <span id="casePrice">199</span></button>
+      </div>
+    </div>
+
+    <!-- PRIZE REVEAL -->
+    <div class="screen modal-screen" id="screen-prize">
+      <div class="prize-card">
+        <h2>Вы выиграли!</h2>
+        <div class="prize-image" id="prizeImage">🎁</div>
+        <div class="prize-name" id="prizeName">Item</div>
+        <div class="prize-value">⭐ <span id="prizeValue">0</span></div>
+        <div class="prize-actions">
+          <button class="btn secondary" onclick="sharePrize()">Поделиться <span class="badge">X2 шанс</span></button>
+          <button class="btn primary" onclick="closePrize()">Продолжить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPGRADE -->
+    <div class="screen" id="screen-upgrade">
+      <div class="header">
+        <button class="back-btn" onclick="showScreen('games')">←</button>
+        <h1>CatUp</h1>
+        <div></div>
+      </div>
+      <div class="upgrade-area">
+        <div class="gauge-big">
+          <div class="gauge-circle">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="45" class="gauge-bg"/>
+              <circle cx="50" cy="50" r="45" class="gauge-progress" id="upgradeProgress"/>
+            </svg>
+            <div class="gauge-center">
+              <div class="percent" id="upgradePercent">77.66%</div>
+              <div class="label">высокий шанс</div>
+            </div>
+          </div>
+        </div>
+        <div class="upgrade-inputs">
+          <div class="input-box" onclick="selectStake()">
+            <div class="label">Ставка</div>
+            <div class="value" id="stakeDisplay">Выбрать</div>
+          </div>
+          <div class="input-box" onclick="selectTarget()">
+            <div class="label">Цель</div>
+            <div class="value" id="targetDisplay">Выбрать</div>
+          </div>
+        </div>
+        <button class="btn primary big" id="upgradeBtn" onclick="doUpgrade()">Улучшить</button>
+        <div class="balance-info">Сумма баланса: <span id="upgradeBalance">0.00</span> ⭐ (макс. <span id="maxBalance">0</span>)</div>
+      </div>
+    </div>
+
+    <!-- CRASH -->
+    <div class="screen" id="screen-crash">
+      <div class="header">
+        <button class="back-btn" onclick="showScreen('games')">←</button>
+        <h1>Краш</h1>
+        <div></div>
+      </div>
+      <div class="crash-area">
+        <div class="crash-sky">
+          <div class="sun"></div>
+          <div class="crash-car" id="crashCar">
+            <div class="car-body">🏎️</div>
+            <div class="cat-driver">🐱</div>
+          </div>
+          <div class="multiplier-display" id="crashMult">x1.00</div>
+        </div>
+        <div class="crash-bets">
+          <div class="bet-list" id="crashBets"></div>
+        </div>
+        <div class="crash-controls">
+          <div class="bet-input">
+            <label>Ставка</label>
+            <div class="input-row">
+              <button onclick="adjustCrashBet(-10)">-</button>
+              <input type="number" id="crashBetAmount" value="10" min="1">
+              <button onclick="adjustCrashBet(10)">+</button>
+            </div>
+          </div>
+          <button class="btn primary big" id="crashBetBtn" onclick="placeCrashBet()">Сделать ставку</button>
+          <button class="btn cashout" id="crashCashoutBtn" onclick="cashoutCrash()" style="display:none;">Забрать x<span id="cashoutMult">1.00</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MINES -->
+    <div class="screen" id="screen-mines">
+      <div class="header">
+        <button class="back-btn" onclick="showScreen('games')">←</button>
+        <h1>Мины</h1>
+        <div></div>
+      </div>
+      <div class="mines-area">
+        <div class="live-bar">
+          <span class="live">LIVE</span>
+        </div>
+        <div class="mines-grid" id="minesGrid"></div>
+        <div class="mines-size">
+          <button class="size-btn" data-size="3" onclick="setMinesSize(3)">3x3</button>
+          <button class="size-btn active" data-size="5" onclick="setMinesSize(5)">5x5</button>
+          <button class="size-btn" data-size="7" onclick="setMinesSize(7)">7x7</button>
+        </div>
+        <div class="mines-controls">
+          <div class="bet-input">
+            <label>Ставка ⭐</label>
+            <input type="number" id="minesBet" value="10" min="1">
+          </div>
+          <button class="btn primary big" id="minesStartBtn" onclick="startMines()">Сделать ставку</button>
+          <button class="btn cashout" id="minesCashoutBtn" onclick="cashoutMines()" style="display:none;">Забрать ⭐ <span id="minesWin">0</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHEEL -->
+    <div class="screen" id="screen-wheel">
+      <div class="header">
+        <button class="back-btn" onclick="showScreen('games')">←</button>
+        <h1>Колесо Фортуны</h1>
+        <div></div>
+      </div>
+      <div class="wheel-area">
+        <div class="wheel-container">
+          <canvas id="wheelCanvas" width="300" height="300"></canvas>
+          <div class="wheel-center">CatUp</div>
+        </div>
+        <div class="wheel-bank">Банк ⭐ <span id="wheelBank">0</span></div>
+        <div class="wheel-players" id="wheelPlayers"></div>
+        <div class="wheel-controls">
+          <div class="bet-input">
+            <label>Ставка ⭐</label>
+            <input type="number" id="wheelBet" value="50" min="10">
+          </div>
+          <button class="btn primary big" id="wheelJoinBtn" onclick="joinWheel()">Присоединиться</button>
+          <button class="btn secondary" id="wheelWaitBtn" style="display:none;">Ожидание...</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAT GAME -->
+    <div class="screen" id="screen-cat">
+      <div class="header">
+        <button class="back-btn" onclick="showScreen('games')">←</button>
+        <h1>Кошка</h1>
+        <div></div>
+      </div>
+      <div class="cat-area">
+        <div class="road-container" id="roadContainer">
+          <div class="road">
+            <div class="lanes" id="lanes"></div>
+            <div class="cat-player" id="catPlayer">🐱</div>
+          </div>
+        </div>
+        <div class="cat-mult">x<span id="catMult">1.00</span></div>
+        <div class="cat-difficulty">
+          <button class="diff-btn active" data-diff="easy" onclick="setCatDiff('easy')">Лёгкая</button>
+          <button class="diff-btn" data-diff="medium" onclick="setCatDiff('medium')">Средняя</button>
+          <button class="diff-btn" data-diff="hard" onclick="setCatDiff('hard')">Тяжёлая</button>
+          <button class="diff-btn" data-diff="hardcore" onclick="setCatDiff('hardcore')">Хардкор</button>
+        </div>
+        <div class="cat-controls">
+          <div class="bet-input">
+            <label>Ставка ⭐</label>
+            <input type="number" id="catBet" value="10" min="1">
+          </div>
+          <button class="btn primary big" id="catStartBtn" onclick="startCatGame()">Начать игру</button>
+          <button class="btn cashout" id="catCashoutBtn" onclick="cashoutCat()" style="display:none;">Забрать</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="screen" id="screen-profile">
+      <div class="profile-header">
+        <div class="balance-big">
+          <span class="star">⭐</span>
+          <span id="profileBalance">0</span>
+          <div class="label">Баланс звёзд</div>
+        </div>
+        <div class="profile-actions">
+          <button class="btn secondary" onclick="alert('Вывод пока недоступен')">Вывести</button>
+          <button class="btn primary" onclick="showScreen('topup')">Пополнить</button>
+        </div>
+      </div>
+      <div class="invite-card">
+        <h3>Пригласите друзей</h3>
+        <p>И получайте 10% от их пополнений, а так же другие бонусы!</p>
+        <button class="btn outline" onclick="inviteFriends()">Пригласить <span class="badge green">+2 ⭐</span></button>
+      </div>
+    </div>
+
+    <!-- TOPUP -->
+    <div class="screen" id="screen-topup">
+      <div class="header">
+        <button class="back-btn" onclick="showScreen('profile')">←</button>
+        <h1>Пополнение баланса</h1>
+        <div></div>
+      </div>
+      <div class="topup-tabs">
+        <button class="tab" data-tab="gram" onclick="switchTopupTab('gram')">GRAM</button>
+        <button class="tab active" data-tab="stars" onclick="switchTopupTab('stars')">⭐ Звёздами</button>
+        <button class="tab" data-tab="gifts" onclick="switchTopupTab('gifts')">🎁 Подарками</button>
+      </div>
+      <div class="topup-content" id="topupStars">
+        <div class="amount-display">
+          <div class="amount">200 ⭐</div>
+          <div class="approx">~ 2.43 GRAM (-10%)</div>
+        </div>
+        <div class="quick-amounts">
+          <button onclick="setTopupAmount(500)">+500</button>
+          <button onclick="setTopupAmount(2000)">+2000</button>
+          <button onclick="setTopupAmount(5000)">+5000</button>
+        </div>
+        <button class="btn primary big" onclick="buyStars()">Пополнить</button>
+      </div>
+      <div class="topup-content" id="topupGram" style="display:none;">
+        <div class="disabled-msg">Пополнение через GRAM временно недоступно</div>
+        <button class="btn secondary big" disabled>Подключить кошелёк</button>
+      </div>
+      <div class="topup-content" id="topupGifts" style="display:none;">
+        <div class="gift-info">
+          <h3>Внесите подарок</h3>
+          <p>Затем продайте его за звёзды на баланс или используйте для апгрейда</p>
+          <button class="btn primary big" onclick="openGiftBot()">Добавить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GIFT BOT MODAL -->
+    <div class="screen modal-screen" id="screen-gift-bot">
+      <div class="modal-card">
+        <button class="close-btn" onclick="closeModal('screen-gift-bot')">×</button>
+        <h2>Добавить подарок</h2>
+        <div class="warning">
+          Не дарите подарки с Telegram маркета!<br>
+          Отправляйте подарки только напрямую со своего аккаунта.
+        </div>
+        <div class="steps">
+          <div class="step">
+            <span class="num">1</span>
+            <div>
+              <strong>Перейдите в бота</strong>
+              <p>Юзернейм бота @Avstralua</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="num">2</span>
+            <div>
+              <strong>Отправьте ему подарок</strong>
+              <p>Модель, фон и символ не учитываются!</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="num">3</span>
+            <div>
+              <strong>Подарок добавится в профиль</strong>
+              <p>В течение нескольких минут</p>
+            </div>
+          </div>
+        </div>
+        <button class="btn primary big" onclick="goToBot()">Перейти</button>
+      </div>
+    </div>
+
+    <!-- CASE SETTINGS -->
+    <div class="screen modal-screen" id="screen-case-settings">
+      <div class="modal-card small">
+        <button class="close-btn" onclick="closeModal('screen-case-settings')">×</button>
+        <h2>Настройки кейса</h2>
+        <div class="setting-row">
+          <div>
+            <strong>Демо</strong>
+            <p>Все кейсы бесплатные, но призы не начисляются</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="demoToggle" onchange="toggleDemo()">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <button class="btn secondary" onclick="closeModal('screen-case-settings')">Закрыть</button>
+      </div>
+    </div>
+
+    <!-- STAKE / TARGET SELECT (for upgrade) -->
+    <div class="screen modal-screen" id="screen-select-item">
+      <div class="modal-card">
+        <button class="close-btn" onclick="closeModal('screen-select-item')">×</button>
+        <h2 id="selectTitle">Выбрать ставку</h2>
+        <div class="items-list" id="selectItemsList"></div>
+        <div class="nft-empty" id="nftEmpty" style="display:none;">
+          <p>NFT не нашлись</p>
+          <button class="btn primary" onclick="openGiftBot()">Пополнить NFT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-screen="games" onclick="showScreen('games')">
+        <span class="icon">🎮</span>
+        <span>Игры</span>
+      </button>
+      <button class="nav-item" data-screen="contests" onclick="alert('Конкурсы скоро')">
+        <span class="icon">💰</span>
+        <span>Конкурсы</span>
+      </button>
+      <button class="nav-item" data-screen="leaders" onclick="alert('Лидеры скоро')">
+        <span class="icon">🏆</span>
+        <span>Лидеры</span>
+      </button>
+      <button class="nav-item" data-screen="shop" onclick="alert('Магазин скоро')">
+        <span class="icon">🛒</span>
+        <span>Магазин</span>
+      </button>
+      <button class="nav-item" data-screen="profile" onclick="showScreen('profile')">
+        <span class="icon">👤</span>
+        <span>Профиль</span>
+      </button>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
