@@ -34,7 +34,7 @@
             <h2>Кейсы</h2>
             <p>Открывайте кейсы и получайте призы</p>
           </div>
-          <div class="card-icon case-icon">🧰</div>
+          <div class="card-icon"><img src="assets/toolbox.jpg" alt="Кейсы" class="menu-img"></div>
         </div>
 
         <div class="menu-card orange" onclick="showScreen('upgrade')">
@@ -55,7 +55,7 @@
             <h2>Краш</h2>
             <p>Успейте забрать выигрыш, пока ракета летит</p>
           </div>
-          <div class="card-icon car-icon">🏎️</div>
+          <div class="card-icon"><img src="assets/crash-car.jpg" alt="Краш" class="menu-img"></div>
         </div>
 
         <div class="menu-card green" onclick="showScreen('mines')">
@@ -63,7 +63,7 @@
             <h2>Мины</h2>
             <p>Найдите выигрыш, не попав на мину</p>
           </div>
-          <div class="card-icon">💣</div>
+          <div class="card-icon"><img src="assets/bomb.jpg" alt="Мины" class="menu-img"></div>
         </div>
 
         <div class="menu-card dark" onclick="showScreen('wheel')">
@@ -183,8 +183,9 @@
         <div class="crash-sky">
           <div class="sun"></div>
           <div class="crash-car" id="crashCar">
-            <div class="car-body">🏎️</div>
-            <div class="cat-driver">🐱</div>
+            <img src="assets/crash-car.jpg" alt="CatUp Car" class="crash-car-img">
+            <div class="exhaust-fire left"></div>
+            <div class="exhaust-fire right"></div>
           </div>
           <div class="multiplier-display" id="crashMult">x1.00</div>
         </div>
@@ -243,9 +244,11 @@
       </div>
       <div class="wheel-area">
         <div class="wheel-container">
+          <div class="wheel-pointer"></div>
           <canvas id="wheelCanvas" width="300" height="300"></canvas>
           <div class="wheel-center">CatUp</div>
         </div>
+        <div class="wheel-timer" id="wheelTimer"></div>
         <div class="wheel-bank">Банк ⭐ <span id="wheelBank">0</span></div>
         <div class="wheel-players" id="wheelPlayers"></div>
         <div class="wheel-controls">
