@@ -159,6 +159,7 @@ let state = {
   crashBet: 0,
   crashCashed: false,
   crashInterval: null,
+  crashCountdown: false,
   // Mines
   minesSize: 5,
   minesGrid: [],
@@ -183,10 +184,10 @@ let state = {
 
 const CASES = {
   secret: {
-    name: 'Secret', price: 199, icon: 'assets/secret.jpg', limit: true, img: true,
+    name: 'Secret', price: 199, icon: './assets/secret.jpg', limit: true, img: true,
     prizes: [
-      { name: 'Chill Flame', icon: '🔥', value: 500, weight: 15 },
-      { name: 'Vice Cream', icon: '🍦', value: 300, weight: 30 },
+      { name: 'Chill Flame', icon: './assets/chill-flame.jpg', img: true, value: 500, weight: 15 },
+      { name: 'Vice Cream', icon: './assets/vice-cream.jpg', img: true, value: 300, weight: 30 },
       { name: 'Snoop Dog', icon: '🐶', value: 800, weight: 5 },
       { name: '100⭐', icon: '⭐', value: 100, weight: 60 },
       { name: '50⭐', icon: '⭐', value: 50, weight: 65 },
@@ -194,20 +195,20 @@ const CASES = {
     ]
   },
   newgift: {
-    name: 'New Gift', price: 299, icon: 'assets/new-gift.jpg', limit: true, img: true,
+    name: 'New Gift', price: 299, icon: './assets/new-gift.jpg', limit: true, img: true,
     prizes: [
-      { name: 'Mad Pumpkin', icon: '🎃', value: 1200, weight: 3 },
+      { name: 'Mad Pumpkin', icon: './assets/mad-pumpkin.jpg', img: true, value: 1200, weight: 3 },
       { name: 'Candy Cane', icon: '🍬', value: 150, weight: 34 },
-      { name: 'Lol Pop', icon: '🍭', value: 120, weight: 28 },
-      { name: 'Vice Cream', icon: '🍦', value: 300, weight: 32 },
+      { name: 'Lol Pop', icon: './assets/lol-pop.jpg', img: true, value: 120, weight: 28 },
+      { name: 'Vice Cream', icon: './assets/vice-cream.jpg', img: true, value: 300, weight: 32 },
       { name: '150⭐', icon: '⭐', value: 150, weight: 65 },
       { name: '100⭐', icon: '⭐', value: 100, weight: 55 },
     ]
   },
   newmask: {
-    name: 'New Mask', price: 499, icon: 'assets/new-mask.jpg', limit: false, img: true,
+    name: 'New Mask', price: 499, icon: './assets/new-mask.jpg', limit: false, img: true,
     prizes: [
-      { name: 'Myth Mask', icon: '🗿', value: 2000, weight: 5 },
+      { name: 'Myth Mask', icon: './assets/myth-mask.jpg', img: true, value: 2000, weight: 5 },
       { name: 'Fresh Socks', icon: '🧦', value: 200, weight: 39 },
       { name: 'Input Key', icon: '🔑', value: 400, weight: 15 },
       { name: 'Candy Cane', icon: '🍬', value: 150, weight: 44 },
@@ -215,30 +216,30 @@ const CASES = {
     ]
   },
   nftcase: {
-    name: 'NFT Case', price: 149, icon: 'assets/nft-case.jpg', limit: false, img: true,
+    name: 'NFT Case', price: 149, icon: './assets/nft-case.jpg', limit: false, img: true,
     prizes: [
       { name: 'Star Notepad', icon: '📓', value: 350, weight: 10 },
-      { name: 'Witch Hat', icon: '🎩', value: 280, weight: 11 },
-      { name: 'Moon Pendant', icon: '🌙', value: 420, weight: 9 },
+      { name: 'Witch Hat', icon: './assets/witch-hat.jpg', img: true, value: 280, weight: 11 },
+      { name: 'Moon Pendant', icon: './assets/moon-pendant.jpg', img: true, value: 420, weight: 9 },
       { name: '50⭐', icon: '⭐', value: 50, weight: 65 },
       { name: '25⭐', icon: '⭐', value: 25, weight: 70 },
     ]
   },
   meow: {
-    name: 'Meow', price: 199, icon: 'assets/meow.jpg', limit: false, img: true,
+    name: 'Meow', price: 199, icon: './assets/meow.jpg', limit: false, img: true,
     prizes: [
-      { name: 'Scared Cat', icon: '🙀', value: 50000, weight: 0.000001 },
-      { name: 'Ion Gem', icon: '💎', value: 10000, weight: 0.000002 },
+      { name: 'Scared Cat', icon: './assets/scared-cat.jpg', img: true, value: 50000, weight: 0.000001 },
+      { name: 'Ion Gem', icon: './assets/ion-gem.jpg', img: true, value: 10000, weight: 0.000002 },
       { name: '50⭐', icon: '⭐', value: 50, weight: 75 },
       { name: '75⭐', icon: '⭐', value: 75, weight: 67 },
     ]
   },
   watch: {
-    name: 'Watch', price: 249, icon: 'assets/watch.jpg', limit: false, img: true,
+    name: 'Watch', price: 249, icon: './assets/watch.jpg', limit: false, img: true,
     prizes: [
-      { name: 'Swiss Watch', icon: '⌚', value: 100000, weight: 0.0000001 },
-      { name: 'Kissed Frog', icon: '🐸', value: 50000, weight: 0.00000001 },
-      { name: 'Big Year', icon: '📅', value: 800, weight: 30 },
+      { name: 'Swiss Watch', icon: './assets/swiss-watch.jpg', img: true, value: 100000, weight: 0.0000001 },
+      { name: 'Kissed Frog', icon: './assets/kissed-frog.jpg', img: true, value: 50000, weight: 0.00000001 },
+      { name: 'Big Year', icon: './assets/big-year.jpg', img: true, value: 800, weight: 30 },
       { name: '150⭐', icon: '⭐', value: 150, weight: 55 },
       { name: '100⭐', icon: '⭐', value: 100, weight: 70 },
       { name: '75⭐', icon: '⭐', value: 75, weight: 80 },
@@ -357,7 +358,7 @@ function openCaseScreen(key) {
     const p = weightedRandom(c.prizes);
     const item = document.createElement('div');
     item.className = 'roulette-item';
-    item.innerHTML = `${p.icon}<div class="val">⭐${p.value}</div>`;
+    item.innerHTML = `${prizeIconHtml(p)}<div class="val">⭐${p.value}</div>`;
     track.appendChild(item);
   }
   const live = document.getElementById('liveItems');
@@ -366,10 +367,18 @@ function openCaseScreen(key) {
     const p = weightedRandom(c.prizes);
     const d = document.createElement('div');
     d.className = 'live-item';
-    d.textContent = p.icon;
+    d.innerHTML = prizeIconHtml(p);
     live.appendChild(d);
   }
   showScreen('case-open');
+}
+
+
+function prizeIconHtml(p) {
+  if (p.img || (p.icon && p.icon.startsWith('./assets/'))) {
+    return `<img src="${p.icon}" alt="${p.name}" class="prize-img">`;
+  }
+  return `<span class="prize-emoji">${p.icon}</span>`;
 }
 
 function weightedRandom(prizes) {
@@ -403,7 +412,7 @@ function openCase() {
   items.forEach(p => {
     const item = document.createElement('div');
     item.className = 'roulette-item';
-    item.innerHTML = `${p.icon}<div class="val">⭐${p.value}</div>`;
+    item.innerHTML = `${prizeIconHtml(p)}<div class="val">⭐${p.value}</div>`;
     track.appendChild(item);
   });
 
@@ -435,7 +444,7 @@ function openCase() {
 }
 
 function showPrize(prize) {
-  document.getElementById('prizeImage').textContent = prize.icon;
+  document.getElementById('prizeImage').innerHTML = prizeIconHtml(prize);
   document.getElementById('prizeName').textContent = prize.name;
   document.getElementById('prizeValue').textContent = prize.value;
   document.getElementById('screen-prize').classList.add('active');
@@ -517,7 +526,7 @@ function openSelectItem(type) {
     state.inventory.forEach((item, idx) => {
       const row = document.createElement('div');
       row.className = 'item-row';
-      row.innerHTML = `<div class="icon">${item.icon}</div><div class="info"><div class="name">${item.name}</div><div class="val">⭐ ${item.value}</div></div>`;
+      row.innerHTML = `<div class="icon">${prizeIconHtml(item)}</div><div class="info"><div class="name">${item.name}</div><div class="val">⭐ ${item.value}</div></div>`;
       row.onclick = () => {
         if (type === 'stake') state.stakeItem = { ...item, invIdx: idx };
         else state.targetItem = { ...item };
@@ -561,7 +570,7 @@ function doUpgrade() {
 
 // ========== CRASH ==========
 function placeCrashBet() {
-  if (state.crashRunning) return;
+  if (state.crashRunning || state.crashCountdown) return;
   const amount = Number(document.getElementById('crashBetAmount').value);
   if (amount < 1 || amount > state.balance) { alert('Некорректная ставка'); return; }
   state.balance -= amount;
@@ -571,9 +580,27 @@ function placeCrashBet() {
   updateBalanceUI();
 
   document.getElementById('crashBetBtn').style.display = 'none';
-  document.getElementById('crashCashoutBtn').style.display = 'block';
+  document.getElementById('crashCashoutBtn').style.display = 'none';
 
+  // 10 second countdown before flight
+  state.crashCountdown = true;
+  let sec = 10;
+  document.getElementById('crashMult').textContent = sec;
+  const countdownInterval = setInterval(() => {
+    sec--;
+    if (sec > 0) {
+      document.getElementById('crashMult').textContent = sec;
+    } else {
+      clearInterval(countdownInterval);
+      state.crashCountdown = false;
+      startCrashFlight();
+    }
+  }, 1000);
+}
+
+function startCrashFlight() {
   state.crashRunning = true;
+  document.getElementById('crashCashoutBtn').style.display = 'block';
   const car = document.getElementById('crashCar');
   car.classList.add('flying');
   startEngineSound();
@@ -900,8 +927,8 @@ function spinWheel() {
   // Spin animation
   const canvas = document.getElementById('wheelCanvas');
   let rot = 0;
-  const totalRot = 1800 + Math.random() * 720 + (winnerIdx * (360 / state.wheelPlayers.length));
-  const duration = 4500;
+  const totalRot = 2800 + Math.random() * 1000 + (winnerIdx * (360 / Math.max(1, state.wheelPlayers.length)));
+  const duration = 7500;
   const start = performance.now();
 
   function animate(now) {

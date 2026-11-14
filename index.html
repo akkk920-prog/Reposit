@@ -34,7 +34,7 @@
             <h2>Кейсы</h2>
             <p>Открывайте кейсы и получайте призы</p>
           </div>
-          <div class="card-icon"><img src="assets/toolbox.jpg" alt="Кейсы" class="menu-img"></div>
+          <div class="card-icon"><img src="./assets/toolbox.jpg" alt="Кейсы" class="menu-img"></div>
         </div>
 
         <div class="menu-card orange" onclick="showScreen('upgrade')">
@@ -55,7 +55,7 @@
             <h2>Краш</h2>
             <p>Успейте забрать выигрыш, пока ракета летит</p>
           </div>
-          <div class="card-icon"><img src="assets/crash-car.jpg" alt="Краш" class="menu-img"></div>
+          <div class="card-icon"><img src="./assets/crash-car.jpg" alt="Краш" class="menu-img"></div>
         </div>
 
         <div class="menu-card green" onclick="showScreen('mines')">
@@ -63,7 +63,7 @@
             <h2>Мины</h2>
             <p>Найдите выигрыш, не попав на мину</p>
           </div>
-          <div class="card-icon"><img src="assets/bomb.jpg" alt="Мины" class="menu-img"></div>
+          <div class="card-icon"><img src="./assets/bomb.jpg" alt="Мины" class="menu-img"></div>
         </div>
 
         <div class="menu-card dark" onclick="showScreen('wheel')">
@@ -72,14 +72,6 @@
             <p>Проверь свою удачу в колесе Фортуны</p>
           </div>
           <div class="card-icon wheel-icon">🎡</div>
-        </div>
-
-        <div class="menu-card blue" onclick="showScreen('cat')">
-          <div class="card-text">
-            <h2>Кошка</h2>
-            <p>Пройди дорогу кошке и не попади под машину!</p>
-          </div>
-          <div class="card-icon cat-icon">🐱</div>
         </div>
       </div>
     </div>
@@ -183,7 +175,7 @@
         <div class="crash-sky">
           <div class="sun"></div>
           <div class="crash-car" id="crashCar">
-            <img src="assets/crash-car.jpg" alt="CatUp Car" class="crash-car-img">
+            <img src="./assets/crash-car.jpg" alt="CatUp Car" class="crash-car-img">
             <div class="exhaust-fire left"></div>
             <div class="exhaust-fire right"></div>
           </div>
@@ -263,37 +255,6 @@
     </div>
 
     <!-- CAT GAME -->
-    <div class="screen" id="screen-cat">
-      <div class="header">
-        <button class="back-btn" onclick="showScreen('games')">←</button>
-        <h1>Кошка</h1>
-        <div></div>
-      </div>
-      <div class="cat-area">
-        <div class="road-container" id="roadContainer">
-          <div class="road">
-            <div class="lanes" id="lanes"></div>
-            <div class="cat-player" id="catPlayer">🐱</div>
-          </div>
-        </div>
-        <div class="cat-mult">x<span id="catMult">1.00</span></div>
-        <div class="cat-difficulty">
-          <button class="diff-btn active" data-diff="easy" onclick="setCatDiff('easy')">Лёгкая</button>
-          <button class="diff-btn" data-diff="medium" onclick="setCatDiff('medium')">Средняя</button>
-          <button class="diff-btn" data-diff="hard" onclick="setCatDiff('hard')">Тяжёлая</button>
-          <button class="diff-btn" data-diff="hardcore" onclick="setCatDiff('hardcore')">Хардкор</button>
-        </div>
-        <div class="cat-controls">
-          <div class="bet-input">
-            <label>Ставка ⭐</label>
-            <input type="number" id="catBet" value="10" min="1">
-          </div>
-          <button class="btn primary big" id="catStartBtn" onclick="startCatGame()">Начать игру</button>
-          <button class="btn cashout" id="catCashoutBtn" onclick="cashoutCat()" style="display:none;">Забрать</button>
-        </div>
-      </div>
-    </div>
-
     <!-- PROFILE -->
     <div class="screen" id="screen-profile">
       <div class="profile-header">

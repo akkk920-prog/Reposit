@@ -258,13 +258,18 @@ body {
 }
 
 .case-card .case-img {
-  width: 72px;
-  height: 72px;
+  width: 90px;
+  height: 90px;
   object-fit: contain;
-  margin: 12px auto 8px;
+  margin: 16px auto 10px;
   display: block;
-  border-radius: 12px;
-  filter: drop-shadow(0 3px 8px rgba(0,0,0,0.35));
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+}
+
+.case-card .case-img[src], .case-card img {
+  max-width: 100%;
 }
 
 .case-card .name {
@@ -536,6 +541,13 @@ body {
   width: 100%;
   height: 100%;
   transform: rotate(-90deg);
+  animation: upgradeSpin 12s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes upgradeSpin {
+  from { transform: rotate(-90deg); }
+  to { transform: rotate(270deg); }
 }
 
 .gauge-bg {
@@ -1352,3 +1364,40 @@ input:checked + .slider:before { transform: translateX(20px); }
 }
 .bot-block h2 { margin-bottom: 12px; }
 .bot-block p { color: var(--text-muted); line-height: 1.5; }
+
+
+/* Prize images in roulette and popup */
+.prize-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 10px;
+  display: block;
+  margin: 0 auto;
+}
+
+.roulette-item .prize-img {
+  width: 52px;
+  height: 52px;
+}
+
+.live-item .prize-img {
+  width: 36px;
+  height: 36px;
+}
+
+#prizeImage .prize-img {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 12px;
+}
+
+.prize-emoji {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.inventory-row .prize-img {
+  width: 42px;
+  height: 42px;
+}
